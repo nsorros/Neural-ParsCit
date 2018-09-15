@@ -9,6 +9,12 @@ Neural ParsCit is a citation string parser which parses reference strings into i
 
 To use the tagger, you need Python 2.7, with Numpy, Theano and Gensim installed.
 
+You can use environmental variables to set the following:
+- `MODEL_PATH`: Path to the model's parameters
+- `WB_PATH`: Path to the word embeddings
+- `TIMEOUT`: Timeout for gunicorn when starting the Flask app. Increase this if you experience the Flask app is unable to start as the model building process takes too long. [Default: 60]
+- `NUM_WORKERS`: Number of workers which gunicorn spawns. [Default: 1]
+
 ### Using virtualenv in Linux systems
 
 ```
@@ -24,7 +30,7 @@ pip install -r requirements.txt
 
 ## Word Embeddings
 
-The word embeddings do not come with this repository. You can obtain the [word embeddings without `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors.tar.gz) (not recommended for v1.0.3) or [word embeddings with `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors_with_unk.tar.gz) and the [word frequency](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/freq) (deprecated in v1.0.3 as the entire word vectors can be loaded with less memory) from WING website. Please read the next section on availability of `<UNK>` in word embeddings.
+The word embeddings do not come with this repository. You can obtain the [word embeddings with `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors_with_unk.tar.gz) from WING website. Please read the next section on availability of `<UNK>` in word embeddings.
 
 You will need to extract the content of the word embedding archive (`vectors_with_unk.tar.gz`) to the root directory for this repository by running `tar xfz vectors_with_unk.tar.gz`.
 
@@ -33,6 +39,18 @@ You will need to extract the content of the word embedding archive (`vectors_wit
 If the word embeddings provided do not have `<UNK>`, your instance will not benefit from the lazy loading of the word vectors and hence the reduction of memory requirements.
 
 Without `<UNK>`, at most 7.5 GB of memory is required as the entire word vectors need to be instantiated in memory to create the new matrix. Comparing with embeddings with `<UNK>`, which is much lower as it only requires at most 4.5 GB.
+
+### Web Server
+
+The web server (a Flask app) provides REST API for
+
+In order to run the web server,  
+
+`docker run --rm -it -p 8000:8000 -e ENVIRONMENT=dev -e TIMEOUT=60 -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
+
+In the docker container, `gunicorn -b 0.0.0.0:8000 -w $NUM_WORKERS --timeout $TIMEOUT run_app:app`
+
+The REST API documentation can be found at `http//localhost:8000/docs`
 
 ## Parse citation strings
 
