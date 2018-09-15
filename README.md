@@ -40,19 +40,10 @@ If the word embeddings provided do not have `<UNK>`, your instance will not bene
 
 Without `<UNK>`, at most 7.5 GB of memory is required as the entire word vectors need to be instantiated in memory to create the new matrix. Comparing with embeddings with `<UNK>`, which is much lower as it only requires at most 4.5 GB.
 
-### Web Server
-
-The web server (a Flask app) provides REST API for
-
-In order to run the web server,  
-
-`docker run --rm -it -p 8000:8000 -e ENVIRONMENT=dev -e TIMEOUT=60 -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
-
-In the docker container, `gunicorn -b 0.0.0.0:8000 -w $NUM_WORKERS --timeout $TIMEOUT run_app:app`
-
-The REST API documentation can be found at `http//localhost:8000/docs`
 
 ## Parse citation strings
+
+### Command Line
 
 The fastest way to use the parser is to run state-of-the-art pre-trained model as follows:
 
@@ -63,6 +54,17 @@ The fastest way to use the parser is to run state-of-the-art pre-trained model a
 The script can run interactively or input can be passed in a file. In the interactive session, the strings are passed one by one. The result is displayed on standard output. If the file option is chosen, the input is given in a file specified by -i option and the output is stored in the directed file. Using the file option, multiple citation strings can be parsed.
 
 The state-of-the-art trained model is provided in the models folder and is named neuralParsCit. The binary file for word embeddings is provided in the docker image of the current version of neural ParsCit. The hyper parameter ```discarded``` is the number of embeddings not used in our model. Retained words have a frequency of more than 0 in the ACM citation literature from 1994-2014.
+
+### Using a Web Server
+
+The web server (a Flask app) provides REST API.
+
+Running the web server,
+`docker run --rm -it -p 8000:8000 -e TIMEOUT=60 -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
+
+In the container, `gunicorn -b 0.0.0.0:8000 -w $NUM_WORKERS --timeout $TIMEOUT run_app:app`
+
+The REST API documentation can be found at `http//localhost:8000/docs`
 
 
 ## Train a model
