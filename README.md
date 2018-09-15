@@ -20,8 +20,10 @@ You can use environmental variables to set the following:
 ```
 virtualenv -ppython2.7 .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements/<env>.txt
 ```
+
+Where `<env>` is `{prod, dev, test}`
 
 ### Using Docker
 
