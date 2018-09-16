@@ -28,7 +28,7 @@ Where `<env>` is `{prod, dev, test}`
 ### Using Docker
 
 1. Build the image: `docker build -t theano-gensim - < Dockerfile`
-1. Run the repo mounted to the container: `docker run -it -v /path/to/Neural-ParsCit:/usr/src --name np theano-gensim:latest /bin/bash`
+1. Run the repo mounted to the container: `docker run -it -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
 
 ## Word Embeddings
 

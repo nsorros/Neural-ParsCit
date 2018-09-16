@@ -1,14 +1,12 @@
 from __future__ import print_function
 import numpy as np
+from flask import abort, current_app, g
 from flask_restful import reqparse
 from flask_restful_swagger_2 import swagger, Resource
-from flask import current_app, g
 from app.resources.schemas import Entity, ParseResponse, ParseBatchResponse
 from app.utils import get_model
 from utils import create_input
 from loader import prepare_dataset
-
-import logging
 
 class Parse(Resource):
     """
@@ -35,6 +33,10 @@ class Parse(Resource):
         """
         args = self.parser.parse_args()
         ref_string = args.get('string')
+        if ref_string is None or ref_string == "":
+            # Hackish way as reqparse can't catch empty string
+            abort(400, description='string is empty or not provided.')
+
         tokens = ref_string.split(" ")
 
         data = prepare_dataset([[[token] for token in tokens]],

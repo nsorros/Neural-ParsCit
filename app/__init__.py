@@ -60,9 +60,7 @@ def create_app(config):
         Handles URLs that are not specified
         """
         return jsonify({
-            'error': {
-                'message': error.message
-            }
+            'message': "API doesn't exist"
         }), 404
 
     return app
