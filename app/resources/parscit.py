@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from flask_restful_swagger_2 import swagger, Resource
 from flask import current_app, g
 from app.resources.schemas import Entity, ParseResponse, ParseBatchResponse
-from app.utils import get_model, get_word_to_id, get_char_to_id
+from app.utils import get_model
 from utils import create_input
 from loader import prepare_dataset
 
@@ -54,7 +54,7 @@ class Parse(Resource):
 
 class ParseBatch(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('strings', type=unicode, action='append', location='json')
+    parser.add_argument('strings', type=unicode, action='append', required=True, location='json')
     @swagger.doc({
         'description': 'Parse multiple string and return the associated entity for each token in each string.',
         'reqparser': {
