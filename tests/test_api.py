@@ -9,13 +9,13 @@ def test_parse(client):
 
     assert client.post('/parscit/parse', json=data).status_code == 200
 
-# @pytest.mark.skipif(os.getenv("CI") == 'true', reason="Not running in CI")
-# def test_parse_no_content(client):
-#     data = {
-#         'string': ""
-#     }
-#
-#     assert client.post('/parscit/parse', json=data).status_code == 400
+@pytest.mark.skipif(os.getenv("CI") == 'true', reason="Not running in CI")
+def test_parse_no_content(client):
+    data = {
+        'string': ""
+    }
+
+    assert client.post('/parscit/parse', json=data).status_code == 400
 
 @pytest.mark.skipif(os.getenv("CI") == 'true', reason="Not running in CI")
 def test_parse_batch(client):
