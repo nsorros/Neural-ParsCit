@@ -79,5 +79,5 @@ def test_inference_performance():
     }
 
     data_file.close()
-    
-    assert eval_metrics == pytest.approx({'macro_f1': 0.98, 'micro_f1': 0.99}, abs=0.01)
+
+    assert eval_metrics == pytest.approx({'macro_f1': 0.984, 'micro_f1': 0.993}, abs=0.001)
