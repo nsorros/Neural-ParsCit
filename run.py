@@ -43,8 +43,8 @@ model.reload()
 lower = model.parameters['lower']
 zeros = model.parameters['zeros']
 
-word_to_id = {v:i for i,v in model.id_to_word.items()}
-char_to_id = {v:i for i,v in model.id_to_char.items()}
+word_to_id = {v:i for i, v in model.id_to_word.items()}
+char_to_id = {v:i for i, v in model.id_to_char.items()}
 
 while True:
     if opts.run == 'file':

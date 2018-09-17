@@ -134,7 +134,7 @@ def prepare_dataset(sentences, word_to_id, char_to_id, lower=False, zeros=False)
     #Replace all digits with 0
     def f(x):
         x = x.lower() if lower else x
-        return re.sub('\d', '0', x) if zeros else x
+        return re.sub(r'\d', '0', x) if zeros else x
     data = []
     for s in sentences:
         str_words = [w[0] for w in s]

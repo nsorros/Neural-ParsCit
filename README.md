@@ -9,22 +9,30 @@ Neural ParsCit is a citation string parser which parses reference strings into i
 
 To use the tagger, you need Python 2.7, with Numpy, Theano and Gensim installed.
 
+You can use environmental variables to set the following:
+- `MODEL_PATH`: Path to the model's parameters
+- `WB_PATH`: Path to the word embeddings
+- `TIMEOUT`: Timeout for gunicorn when starting the Flask app. Increase this if you experience the Flask app is unable to start as the model building process takes too long. [Default: 60]
+- `NUM_WORKERS`: Number of workers which gunicorn spawns. [Default: 1]
+
 ### Using virtualenv in Linux systems
 
 ```
 virtualenv -ppython2.7 .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements/<env>.txt
 ```
+
+Where `<env>` is `{prod, dev, test}`
 
 ### Using Docker
 
 1. Build the image: `docker build -t theano-gensim - < Dockerfile`
-1. Run the repo mounted to the container: `docker run -it -v /path/to/Neural-ParsCit:/usr/src --name np theano-gensim:latest /bin/bash`
+1. Run the repo mounted to the container: `docker run -it -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
 
 ## Word Embeddings
 
-The word embeddings do not come with this repository. You can obtain the [word embeddings without `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors.tar.gz) (not recommended for v1.0.3) or [word embeddings with `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors_with_unk.tar.gz) and the [word frequency](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/freq) (deprecated in v1.0.3 as the entire word vectors can be loaded with less memory) from WING website. Please read the next section on availability of `<UNK>` in word embeddings.
+The word embeddings do not come with this repository. You can obtain the [word embeddings with `<UNK>`](http://wing.comp.nus.edu.sg/~wing.nus/resources/NParsCit/vectors_with_unk.tar.gz) from WING website. Please read the next section on availability of `<UNK>` in word embeddings.
 
 You will need to extract the content of the word embedding archive (`vectors_with_unk.tar.gz`) to the root directory for this repository by running `tar xfz vectors_with_unk.tar.gz`.
 
@@ -34,7 +42,10 @@ If the word embeddings provided do not have `<UNK>`, your instance will not bene
 
 Without `<UNK>`, at most 7.5 GB of memory is required as the entire word vectors need to be instantiated in memory to create the new matrix. Comparing with embeddings with `<UNK>`, which is much lower as it only requires at most 4.5 GB.
 
+
 ## Parse citation strings
+
+### Command Line
 
 The fastest way to use the parser is to run state-of-the-art pre-trained model as follows:
 
@@ -45,6 +56,17 @@ The fastest way to use the parser is to run state-of-the-art pre-trained model a
 The script can run interactively or input can be passed in a file. In the interactive session, the strings are passed one by one. The result is displayed on standard output. If the file option is chosen, the input is given in a file specified by -i option and the output is stored in the directed file. Using the file option, multiple citation strings can be parsed.
 
 The state-of-the-art trained model is provided in the models folder and is named neuralParsCit. The binary file for word embeddings is provided in the docker image of the current version of neural ParsCit. The hyper parameter ```discarded``` is the number of embeddings not used in our model. Retained words have a frequency of more than 0 in the ACM citation literature from 1994-2014.
+
+### Using a Web Server
+
+The web server (a Flask app) provides REST API.
+
+Running the web server,
+`docker run --rm -it -p 8000:8000 -e TIMEOUT=60 -v $(pwd):/usr/src --name np theano-gensim:latest /bin/bash`
+
+In the container, `gunicorn -b 0.0.0.0:8000 -w $NUM_WORKERS --timeout $TIMEOUT run_app:app`
+
+The REST API documentation can be found at `http//localhost:8000/docs`
 
 
 ## Train a model
