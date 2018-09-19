@@ -66,7 +66,7 @@ Running the web server,
 
 In the container, `gunicorn -b 0.0.0.0:8000 -w $NUM_WORKERS --timeout $TIMEOUT run_app:app`
 
-The REST API documentation can be found at `http//localhost:8000/docs`
+The REST API documentation can be found at `http://localhost:8000/docs`
 
 
 ## Train a model
