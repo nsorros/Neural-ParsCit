@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2016 Guillaume Lample
+Original Work Copyright (c) 2016 Guillaume Lample
+Modified Work Copyright 2018 WING-NUS
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
