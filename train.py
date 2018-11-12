@@ -133,7 +133,7 @@ if not os.path.exists(models_path):
 
 # Initialize model
 model = Model(parameters=parameters, models_path=models_path)
-print "Model location: %s" % model.model_path
+print("Model location: %s" % model.model_path)
 
 # Data parameters
 lower = parameters['lower']
@@ -182,7 +182,7 @@ train_data = prepare_dataset(
 #    len(train_data), len(dev_data), len(test_data))
 
 # Save the mappings to disk
-print 'Saving the mappings to disk...'
+print('Saving the mappings to disk...')
 model.save_mappings(id_to_word, id_to_char, id_to_tag)
 
 # Build the model
@@ -190,7 +190,7 @@ f_train, f_eval = model.build(**parameters)
 
 # Reload previous model values
 if opts.reload:
-    print 'Reloading previous model...'
+    print('Reloading previous model...')
     model.reload()
 
 #
@@ -205,14 +205,14 @@ best_test = -np.inf
 count = 0
 for epoch in xrange(n_epochs):
     epoch_costs = []
-    print "Starting epoch %i..." % epoch
+    print("Starting epoch %i..." % epoch)
     for i, index in enumerate(np.random.permutation(len(train_data))):
         count += 1
-        input = create_input(train_data[index], parameters, True, singletons)
-        new_cost = f_train(*input)
+        inputs = create_input(train_data[index], parameters, True, singletons)
+        new_cost = f_train(*inputs)
         epoch_costs.append(new_cost)
         if i % 50 == 0 and i > 0 == 0:
-            print "%i, cost average: %f" % (i, np.mean(epoch_costs[-50:]))
+            print("%i, cost average: %f" % (i, np.mean(epoch_costs[-50:])))
 #        if count % freq_eval == 0:
 #            dev_score = evaluate(parameters, f_eval, dev_sentences,
 #                                 dev_data, id_to_tag, dico_tags)
@@ -228,7 +228,7 @@ for epoch in xrange(n_epochs):
 #            if test_score > best_test:
 #                best_test = test_score
 #                print "New best score on test."
-    print "Epoch %i done. Average cost: %f" % (epoch, np.mean(epoch_costs))
+    print("Epoch %i done. Average cost: %f" % (epoch, np.mean(epoch_costs)))
 
 #test_score = evaluate(parameters, f_eval, test_sentences, test_data, id_to_tag, dico_tags)
 model.save()
