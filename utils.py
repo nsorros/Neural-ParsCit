@@ -197,24 +197,25 @@ def create_input(data, parameters, add_label, singletons=None):
     """
     words = data['words']
     chars = data['chars']
+
     if singletons is not None:
         words = insert_singletons(words, singletons)
     if parameters['cap_dim']:
         caps = data['caps']
     char_for, char_rev, char_pos = pad_word_chars(chars)
-    input = []
+    inputs = []
     if parameters['word_dim']:
-        input.append(words)
+        inputs.append(words)
     if parameters['char_dim']:
-        input.append(char_for)
+        inputs.append(char_for)
         if parameters['char_bidirect']:
-            input.append(char_rev)
-        input.append(char_pos)
+            inputs.append(char_rev)
+        inputs.append(char_pos)
     if parameters['cap_dim']:
-        input.append(caps)
+        inputs.append(caps)
     if add_label:
-        input.append(data['tags'])
-    return input
+        inputs.append(data['tags'])
+    return inputs
 
 
 def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
@@ -227,11 +228,11 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
     count = np.zeros((n_tags, n_tags), dtype=np.int32)
 
     for raw_sentence, data in zip(raw_sentences, parsed_sentences):
-        input = create_input(data, parameters, False)
+        inputs = create_input(data, parameters, False)
         if parameters['crf']:
-            y_preds = np.array(f_eval(*input))[1:-1]
+            y_preds = np.array(f_eval(*inputs))[1:-1]
         else:
-            y_preds = f_eval(*input).argmax(axis=1)
+            y_preds = f_eval(*inputs).argmax(axis=1)
         y_reals = np.array(data['tags']).astype(np.int32)
         assert len(y_preds) == len(y_reals)
         p_tags = [id_to_tag[y_pred] for y_pred in y_preds]
@@ -264,12 +265,12 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
     # Confusion matrix with accuracy for each tag
     print("{: >2}{: >7}{: >7}%s{: >9}" % ("{: >7}" * n_tags)).format(
         "ID", "NE", "Total",
-        *([id_to_tag[i] for i in xrange(n_tags)] + ["Percent"])
+        *([id_to_tag[i] for i in range(n_tags)] + ["Percent"])
     )
     for i in range(n_tags):
         print("{: >2}{: >7}{: >7}%s{: >9}" % ("{: >7}" * n_tags)).format(
             str(i), id_to_tag[i], str(count[i].sum()),
-            *([count[i][j] for j in xrange(n_tags)] +
+            *([count[i][j] for j in range(n_tags)] +
               ["%.3f" % (count[i][i] * 100. / max(1, count[i].sum()))])
         )
 
