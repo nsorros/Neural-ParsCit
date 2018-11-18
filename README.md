@@ -1,5 +1,7 @@
 ## Neural ParsCit
 
+This is the official repository of Neural-ParsCit and is under active development at National University of Singapore (NUS), Singapore
+
 [![Build Status](https://travis-ci.com/WING-NUS/Neural-ParsCit.svg?branch=master)](https://travis-ci.com/WING-NUS/Neural-ParsCit)
 
 Neural ParsCit is a citation string parser which parses reference strings into its component tags such as Author, Journal, Location, Date, etc. Neural ParsCit uses Long Short Term Memory (LSTM), a deep learning model to parse the reference strings. This deep learning algorithm is chosen as it is designed to perform sequence-to-sequence labeling tasks such as ours. Input to the model are word embeddings which are vector representation of words. We provide word embeddings as well as character embeddings as input to the network.
